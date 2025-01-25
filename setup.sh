@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
 echo ">>> apt install fail2ban less man nvim ranger curl"
-sudo apt install fail2ban less man nvim ranger curl
+sudo apt install fail2ban less man neovim ranger curl
 
 echo ">>> apt install zsh zsh-autosuggestions zsh-syntax-highlightinv zsh-common zsh-doc"
 sudo apt install \
     zsh \
     zsh-autosuggestions \
-    zsh-syntax-highlightinv \
+    zsh-syntax-highlighting \
     zsh-common \
     zsh-doc
 
