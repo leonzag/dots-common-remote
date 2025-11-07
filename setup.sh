@@ -37,6 +37,7 @@ pkgs=(
     btop
     neovim
     ranger
+    git
 )
 echo '->>' "${pkgs[@]}"
 apt install -y "${pkgs[@]}"
@@ -55,16 +56,23 @@ apt install -y "${prompt_pkgs[@]}"
 echo -e "\n### ADD USER\n"
 enter_user
 enter_pwd
-useradd -m "$user"
-echo "$password" | passwd "$user"
+sudo useradd -m -s "$(which zsh)" -U "$user"
+echo "${user}:${password}" | sudo chpasswd
 
 echo -e "\n### SET GROUPS (user)\n"
 grps=(admin adm sudo network netdev input storage docker)
 echo "->>" "${grps[@]}"
 for grp in "${grps[@]}"; do
-    (cut -d: -f1 /etc/group | sort | grep -q "$grp") || groupadd "$grp"
+    (cut -d: -f1 /etc/group | sort | grep -q "^$grp\$") || groupadd "$grp"
     usermod -aG "$grp" "$user"
 done
+
+echo -e "\n### SETUP USER DIRECTORY: ubuntu 24\n"
+homedir="/home/$user"
+cp -r .config/* "$homedir/.config/"
+cp .*.zsh .zshrc "$homedir/"
+git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$homedir/powerlevel10k"
+chown -R "$user:$user" "/home/$user"
 
 echo -e "\n### NEXT STEPS\n"
 ip_addr="$(curl -s ifconfig.me || echo 'SERVER_IP')"
