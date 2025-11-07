@@ -72,12 +72,8 @@ function _protected_source { # sourcefile
 }
 _protected_source ".functions.zsh"
 _protected_source ".aliases.zsh"
-_protected_source ".colors.zsh"
-_protected_source ".console.zsh"
 _protected_source ".keybinds.zsh"
-_protected_source ".prompt.zsh"
 
-source ~/powerlevel10k/powerlevel10k.zsh-theme
 source ~/powerlevel10k/powerlevel10k.zsh-theme
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
