@@ -1,14 +1,25 @@
 #!/usr/bin/env bash
 
-if [ "$(id -u)" -ne 0 ]
-  then echo Please run this script as root or using sudo!
-  exit
+if [ "$(id -u)" -ne 0 ]; then
+    echo Please run this script as root or using sudo!
+    exit
 fi
+
+enter_pwd() {
+    read -r -s -p "Password: " password
+    local confirm_pwd
+    read -r -s -p "Password: " confirm_pwd
+    if [ "$password" != "$confirm_pwd" ]; then
+        echo "Passwords are different! Try again."
+        enter_pwd
+    fi
+}
 
 enter_user() {
     echo -ne "Enter username: "
     read -r user
     test "$user" || enter_user
+    enter_pwd
 }
 
 echo -e "\n### UPDATE SYSTEM\n"
@@ -43,7 +54,9 @@ apt install -y "${prompt_pkgs[@]}"
 
 echo -e "\n### ADD USER\n"
 enter_user
-useradd "$user"
+enter_pwd
+useradd -m "$user"
+echo "$password" | passwd "$user"
 
 echo -e "\n### SET GROUPS (user)\n"
 grps=(admin adm sudo network netdev input storage docker)
